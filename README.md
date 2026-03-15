@@ -12,7 +12,7 @@ When users search for their favourit product, our website returns the top 6 clos
 We built it using html, css, and javascript. 
 
 ## How to run
-Clone the website. Open the files in vscode. Then, click the live button on the bottom left bar. You should be able to use the website right now in your browser.
+Clone the repo. Open the files in vscode. Then, click the live button on the bottom left bar. You should be able to use the website right now in your browser.
 
 ## Challenges we ran into
 Learning how to implement an API as well as how to integrate code while we are both pushing to the website
