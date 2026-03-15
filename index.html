@@ -2,11 +2,288 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dupify: Makeup Dupe Finder ✨</title>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4e8 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #b13e7c;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        #productInput {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #ffd9e8;
+            border-radius: 30px;
+            outline: none;
+        }
+
+        #productInput:focus {
+            border-color: #b13e7c;
+        }
+
+        #searchBtn {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #b13e7c;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        #searchBtn:hover {
+            background-color: #8e2e63;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ffd9e8;
+            border-top-color: #b13e7c;
+            border-radius: 50%;
+            margin: 0 auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fee;
+            color: #c00;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .results {
+            margin-top: 40px;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffd9e8;
+        }
+
+        #originalProduct {
+            color: #b13e7c;
+            font-weight: bold;
+        }
+
+        .dupes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .dupe-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #ffe4e8;
+            padding: 20px;
+        }
+
+        .dupe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dupe-number {
+            background: #b13e7c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .dupe-brand {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .dupe-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .dupe-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #b13e7c;
+            margin-bottom: 15px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: #ffd9e8;
+            color: #b13e7c;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .dupe-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            border-top: 1px solid #ffd9e8;
+            padding-top: 15px;
+            white-space: pre-line;
+        }
+
+        .examples {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .examples h3 {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .example-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #ffd9e8;
+            border-radius: 20px;
+            color: #b13e7c;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .example-btn:hover {
+            background: #b13e7c;
+            border-color: #b13e7c;
+            color: white;
+        }
+
+        .dupe-name-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: color 0.2s ease;
+        }
+
+        .dupe-name-link:hover {
+            color: #b13e7c;  /* Changes to your brand pink on hover */
+            cursor: pointer;
+        }
+
+        .dupe-name-link:hover .dupe-name {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome!</h1>
-    <button id="myButton">Click Me</button>
+    <div class="container">
+        <h1>Dupeify: Makeup Dupe Finder</h1>
+        <p class="subtitle">Find cheaper alternatives based on ingredients, finish, and function</p>
+        
+        <div class="search-section">
+            <input 
+                type="text" 
+                id="productInput" 
+                placeholder="e.g., Charlotte Tilbury Pillow Talk, Fenty Gloss Bomb, etc."
+            >
+            <button id="searchBtn">Find Dupes</button>
+        </div>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="error" class="error hidden"></div>
+
+        <div id="results" class="results hidden">
+            <h2>Top Dupes for <span id="originalProduct"></span></h2>
+            <div id="dupesList" class="dupes-grid"></div>
+        </div>
+
+        <div class="examples">
+            <h3>Try these examples:</h3>
+            <div class="example-buttons">
+                <button class="example-btn" data-product="Charlotte Tilbury Pillow Talk">Pillow Talk</button>
+                <button class="example-btn" data-product="Fenty Beauty Gloss Bomb">Fenty Gloss Bomb</button>
+                <button class="example-btn" data-product="Rare Beauty Soft Pinch Blush">Rare Beauty Blush</button>
+                <button class="example-btn" data-product="Drunk Elephant Protini">Drunk Elephant Protini</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
