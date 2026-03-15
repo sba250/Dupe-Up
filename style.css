@@ -97,7 +97,7 @@ background:#fff;
 .home{
 display:flex;
 align-items:center;
-background:#ffc1da;
+background:#f6d5e3;
 }
 
 .home .content{
@@ -141,6 +141,6 @@ font-size:1.6rem;
 /* SEARCH */
 
 .search{
-background:#f7f7f7;
+background:#f6d5e3;
 font-size:1.6rem;
 }
